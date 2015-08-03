@@ -15,23 +15,98 @@
 #### General Questions:
 
 * What did you learn yesterday/this week?
+ - How to use python function decorators in Flask to define routes
 * What excites or interests you about coding?
+ - The ability to design and pull your ideas from your head into the work for someone
+   else to experience and enjoy
 * What is a recent technical challenge you experienced and how did you solve it?
+ - Figuring out how to test a user's tests with my own tests. I did this by separating
+   out the test lines and running each of them through scenarios where they should
+   cause a failure and then scenarios where they should pass. From there, I send
+   messages back to the user to explain to them the scenario in which it failed and
+   how to correct it.
 * What UI, Security, Performance, SEO, Maintainability or Technology considerations do you make while building a web application or site?
+ - UI considerations: Nav bar on top, links are underlined, vertical scrolling,
+   no parallax effect, no carousel, responsive to small screens and high pixel
+   ration screens. As few dropdowns as possible (hopefully none). Roles properly
+   labeled for screen readers. Icons/links far enough apart to easily hit with
+   mouse or finger.
+ - Performance considerations: As few DNS lookups as possible, images put together
+   as spritemaps, js and css both concatenated and minified, assets potentially
+   loading from different subdomains to download multiple in parallel, all assets
+   are gzipped, all images appropriately sized, css and js is not blocking load
+   of page, and most important css is inlined to allow quick load of page with
+   enhancement styles coming after
+ - SEO: TBD
+ - Maintainability: Properly structured and modular css, intelligent use of
+   css classes instead of ids, preferable use of vanilla javascript over jQuery,
+   modular code structure with variable names that make sense and the use of
+   semantic html like <section> and <aside>
+ - Technology considerations: Assume the user is using a mobile device. Build out
+   from there, making considerations for larger phones, small tablets, large tablets
+   and laptop/desktop computers. Create css rules that scale properly for retina
+   screens (double the number of pixels) so images don't look like garbage. Think
+   about images you are serving and how long they take to download on average.
+   Use roles, alt text, and tabbing copiously to make the page accessible to
+   screen readers.
 * Talk about your preferred development environment.
+ - sublime text with a number of plugins, webstorm, or vim
 * Which version control systems are you familiar with?
+ - git and svn
 * Can you describe your workflow when you create a web page?
+ - Sketch out general layout (Sketch or Balsamiq)
+ - Decide on purpose of page
+ - Decide on general features like navbar, sidebars, and footer.
+ - Decide if you need a separate mobile page or if responsive works.
+ - Create general containers (navbar, sidebars, footer, main containers)
+ - Choose a serif and san-serif font to use throughout the page
+ - Position containers
+ - Put in content placeholders
+ - Experiment with color combinations and fonts
+ - Check with users regularly to get visual and behavioral feedback
+ - Structure and modularize CSS to prevent a giant mess later
+ - Finalize design with users
 * If you have 5 different stylesheets, how would you best integrate them into the site?
+ - Concatenate all the stylesheets and minify the result. Serve that
+ - Move the common rules to the same stylesheet and reduce the side of the others
+ - Conditionally load the necessary stylesheets with inline js if no other choices
 * Can you describe the difference between progressive enhancement and graceful degradation?
 * How would you optimize a website's assets/resources?
+ - Sprite Maps
+ - JS/CSS Concatenation and Minification
+ - Image Zipping
+ - Inline JS/CSS where needed
 * How many resources will a browser download from a given domain at a time?
+ - Earlier browsers like IE7 allow for 2 concurrent connections and later
+   browsers like Chrome and Mozilla typically around 6
   * What are the exceptions?
+    - Domain Partitioning (using static subdomains to load more assets concurrently)
+    - SPDY (is not locked into TCP connection design, which prevents concurrency)
 * Name 3 ways to decrease page load (perceived or actual load time).
+ - Concatenate and minify scripts
+ - Reduce DNS lookups
+ - Load scripts asynchronously
 * If you jumped on a project and they used tabs and you used spaces, what would you do?
+ - Use tabs because it's your responsibility to follow established style
 * Describe how you would create a simple slideshow page.
+ - Create container1 with 100% the height and width of the body
+ - Create another container2 inside container1 to hold all the slides. The
+   display of it should be set to inline
+ - Within container3, place any number of containers each with a width of 
+   container1 and a slide in each of the containers
+ - Simulate the sliding on click, enter or left/right arrow by shifting the
+   absolute positioning of container2 one screen width left or right
 * If you could master one technology this year, what would it be?
+ - Go
 * Explain the importance of standards and standards bodies.
+ - Without them, maintainability would drop sharply due to new developers being
+   unable to participate without significant onboarding, lots of downtime due
+   to style differences between team members, slower tools since they can't be
+   optimized for idiomatic syntax, and individual platforms would require an
+    incredible amount of work to learn and develop for.
 * What is Flash of Unstyled Content? How do you avoid FOUC?
+ - The page renders before your styles are applied
+ - Make sure to put your stylesheet links in the head of the document
 * Explain what ARIA and screenreaders are, and how to make a website accessible.
 * Explain some of the pros and cons for CSS animations versus JavaScript animations.
 * What does CORS stand for and what issue does it address?
