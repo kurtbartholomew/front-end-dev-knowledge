@@ -37,7 +37,7 @@
    are gzipped, all images appropriately sized, css and js is not blocking load
    of page, and most important css is inlined to allow quick load of page with
    enhancement styles coming after
- - SEO: TBD
+ - SEO: Load up those meta tags in the head with appropriate description words
  - Maintainability: Properly structured and modular css, intelligent use of
    css classes instead of ids, preferable use of vanilla javascript over jQuery,
    modular code structure with variable names that make sense and the use of
@@ -50,31 +50,39 @@
    Use roles, alt text, and tabbing copiously to make the page accessible to
    screen readers.
 * Talk about your preferred development environment.
- - sublime text with a number of plugins, webstorm, or vim
+ - IntelliJ, WebStorm, SublimeText3 or Vim aided by automated build and testing tools like gulp or grunt
 * Which version control systems are you familiar with?
  - git and svn
 * Can you describe your workflow when you create a web page?
- - Sketch out general layout (Sketch or Balsamiq)
  - Decide on purpose of page
- - Decide on general features like navbar, sidebars, and footer.
+ - Decide on requirements and user stories
+ - Sketch out general layout comp (Photoshop or Sketch)
+ - Design review comp with others
+ - Decide on general states of webpage and how to navigate between them
  - Decide if you need a separate mobile page or if responsive works.
- - Create general containers (navbar, sidebars, footer, main containers)
  - Choose a serif and san-serif font to use throughout the page
- - Position containers
+ - Create mockup via Sketch
+ - Design review mockup with others
+ - Once design has been cemented, move on to implementation
+ - Cement base semantic html structure
+ - Create base css for positioning
  - Put in content placeholders
+ - Write javascript as needed for interactions, data modeling and view management
+ - Write tests for service and data model layers
  - Experiment with color combinations and fonts
  - Check with users regularly to get visual and behavioral feedback
  - Structure and modularize CSS to prevent a giant mess later
  - Finalize design with users
 * If you have 5 different stylesheets, how would you best integrate them into the site?
  - Concatenate all the stylesheets and minify the result. Serve that
- - Move the common rules to the same stylesheet and reduce the side of the others
+ - Move the common rules to the same stylesheet and remove from the others
  - Conditionally load the necessary stylesheets with inline js if no other choices
 * Can you describe the difference between progressive enhancement and graceful degradation?
 * How would you optimize a website's assets/resources?
  - Sprite Maps
  - JS/CSS Concatenation and Minification
  - Image Zipping
+ - Caching of assets via CDN
  - Inline JS/CSS where needed
 * How many resources will a browser download from a given domain at a time?
  - Earlier browsers like IE7 allow for 2 concurrent connections and later
@@ -108,30 +116,59 @@
  - The page renders before your styles are applied
  - Make sure to put your stylesheet links in the head of the document
 * Explain what ARIA and screenreaders are, and how to make a website accessible.
+ - ARIA stands for Accessible Rich Internet Applications
+ - ARIA is a collection of attributes used on DOM nodes that allow programs to parse the DOM tree and find useful information for visually challenged users that are relayed to them via sound output. An example of this would be a role attribute defined as "menu" and items within defined as "menuitem". These would be parsed and read aloud for the user as a menu to choose from.
 * Explain some of the pros and cons for CSS animations versus JavaScript animations.
+ Pros:
+  - CSS animations use GPU if available while relatively few js animations can
+  - CSS animations can be much more hardware accelerated
+  - CSS transforms and opacity changes can be done on a different thread
+ Cons: 
+  - CSS animations cannot really use seperate threads for changes involving DOM reflows
+  - CSS animations under high load can occur improperly due to concurrency and scheduling issues with multiple threads
+  - Unable to stop CSS animations in the middle of a tween typically
+  - CSS animation keyframes are onerous to implement
+  - CSS animations do not work in IE9 or earlier
+  - CSS animations are limited in terms of curve animations
 * What does CORS stand for and what issue does it address?
+  - Cross Origin Resource Sharing. This prevents scripts from creating requests to domains other than the domain that the page is currently being served from. This functions to prevent other websites from using cookies containing user info to fraudulently impersonate them and interact with your server.
 
 #### HTML Questions:
 
 * What does a `doctype` do?
+ - Doctypes inform the layout engine of the browser what type of validation it should use to validate and parse the html content resulting from the request for your web page
 * What's the difference between standards mode and quirks mode?
+ - On a basic level, standards mode is the layout engine attempting to adhere to the specification set within the doctype of the document. Quirks mode is set to handle older browser specifications that would typically break under standards mode. Historically, IE's quirks mode basically ran IE5.5 specification, though quirks mode among browsers has been converging.
 * What's the difference between HTML and XHTML?
+ - XHTML is a typically stricter HTML with more xml syntax. This was a kind of stepping stone from HTML4 to HTML5. Namespaces were allowed in XHTML and certain html structures as well as CSS were not available in XHTML. In XHTML, every tag had to be closed and node attributes cannot be omitted (anchor tags have to have an href attribute).
 * Are there any problems with serving pages as `application/xhtml+xml`?
+ - Potential problems are that a user could be using a browser that cannot or does not parse xml correctly. Also, any malformed xml will not be skipped but instead cause the browser to abort loading the page.
 * How do you serve a page with content in multiple languages?
-* What kind of things must you be wary of when design or developing for multilingual sites?
+ - Include a lang="**" attribute at the root of the document for a single language and multiple languages can be enabled by using lang="**" on containing dom elements. This can also be extended to pages that the browser will visit by putting an hreflang="**" attribute on the element.
+* What kind of things must you be wary of when design or developing for multilingual sites? It is important to think about things like character encoding (typically UTF-8 in a meta tag), directionality of text (typically dir="rtl" or dir="ltr"), font sizing based on language and the length of words (typically asian languages will be shorter pictographs while languages like German will be longer)
 * What are `data-` attributes good for?
+ - Data attributes are good for storing highly granular data that can be retrieved later not just through javascript but that is also accessible through CSS.
 * Consider HTML5 as an open web platform. What are the building blocks of HTML5?
+ - Semantic HTML constructs such as <aside>, <section> and <blockquote>. Additional and important API's that have also been added are things like the <video> and <audio> API's, the Geolocation API, the introduction of <canvas> and <svg> for graphics, web workers for parallel processing and additional caching with localstorage.
 * Describe the difference between a `cookie`, `sessionStorage` and `localStorage`.
+ - Cookies are simple text documents with a name and value pair as well as expiration/protocol attributes. They must be under 4kb and are sent to the server on every request. They can be either deleted on session close or persistent based on their expiration attribute. SessionStorage and localStorage are HTML5 constructs for storing data under 5MB (this restriction is per domain for localStorage and per domain per tab or window for sessionStorage). Neither are sent to the server automatically and their contents are typically accessed via javascript.
 * Describe the difference between `<script>`, `<script async>` and `<script defer>`.
+ - Once the HTML layout engine parser finds a plain <script> tag, parsing will cease until the script is downloaded and executed. The "async" attribute continues parsing while the script downloads but stops parsing and executes the script when the download finishes. The "defer" attribute tells the layout engine to fully parse the document and download the script before executing the script.
 * Why is it generally a good idea to position CSS `<link>`s between `<head></head>` and JS `<script>`s just before `</body>`? Do you know any exceptions?
+ - Generally, placing css links in the head of the document will prevent a flash of unstyled content (incorrect positioning, lack of content, sizing issues, etc) however it can be useful to place non-critical styles such as fancier fonts after the main document to allow for smaller windows of blank content
 * What is progressive rendering?
+ - Progressive rendering (also called a critical rendering path) is the idea that a page should display content immediately and progressively load more instead of leaving a user with a blank page until all the content is delivered at once.
 * Have you used different HTML templating languages before?
+ - Yes, I've used Mustache/Handlebars, Jade, Underscore and HAML
 
 #### CSS Questions:
 
 * What is the difference between classes and ID's in CSS?
+ - Id is typically for identifying a single DOM element while classes are more for applying styles across a number of elements
 * What's the difference between "resetting" and "normalizing" CSS? Which would you choose, and why?
+ - Resetting the CSS typically means setting all css properties to their base values (this could mean 0, "none", "static", "inherit", "12px", etc.) and therefore starting with a blank slate. Normalizing involves deciding on a standard for css attributes present in the user-agent css of major browsers and implementing that standard. My choice between the two depends on whether I'm implementing it or not. If not, I would choose normalizing since it means less focus on making baseline css decisions and less boilerplate. Resetting would be much less verbose if I was implementing it though.
 * Describe Floats and how they work.
+ - Floating an element means to adhere an element to a particular direction while still allowing the document content to flow around it. Resizing a floated element will cause the content around the element to move appropriately.
 * Describe z-index and how stacking context is formed.
 * Describe BFC(Block Formatting Context) and how it works.
 * What are the various clearing techniques and which is appropriate for what context?
