@@ -170,10 +170,16 @@
 * Describe Floats and how they work.
  - Floating an element means to adhere an element to a particular direction while still allowing the document content to flow around it. Resizing a floated element will cause the content around the element to move appropriately.
 * Describe z-index and how stacking context is formed.
+ - Z-index is the attribute used to define occlusion of elements (that is elements being displayed above or in front of other elements). The stacking context is formed by the hierarchical nature of the DOM. Elements closer to the root element in terms of hierarchy have their z-index evaluated with a higher priority than those within their children. Z-index is not used at all on elements that are statically positioned.
 * Describe BFC(Block Formatting Context) and how it works.
+ - BFC refers to the the specification of block level elements adhering to the left side of their container. It is used to provide rules for positioning within a block as well as the clearing of elements the come after floated elements.
 * What are the various clearing techniques and which is appropriate for what context?
+ - A "clear: both" CSS attribute can be added to a DOM element directly proceeding the floated element (usually an empty div). This is easy but semantically poor.
+ - Add "overflow" CSS attribute to a parent DOM element. This is also simple but can unnecessarily clutter CSS rules.
+ - Use an :after psuedoselector with {content: ".",visibility: "hidden",display: "block", height: 0, clear: "both"}. This is the most commonly accepted way to implement a "clearfix" but also runs into compatibility problems with its psuedoselector.
 * Explain CSS sprites, and how you would implement them on a page or site.
-* What are your favourite image replacement techniques and which do you use when?
+ - A CSS sprite is an image that contains several images used in a page. This allows the use of a single dns lookup instead of one for every image. To utilize a CSS sprite, you'll typically need to use some utility to concatenate the images together. From there, the elements that you want to utilize the images for will use the sprite as a background image (with no repeat). Each specific element will have specific background position and height attributes to display the proper portion of the sprite corresponding to the correct image.
+* What are your favorite image replacement techniques and which do you use when?
 * How would you approach fixing browser-specific styling issues?
 * How do you serve your pages for feature-constrained browsers?
   * What techniques/processes do you use?
