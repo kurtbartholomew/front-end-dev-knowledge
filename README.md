@@ -180,31 +180,77 @@
 * Explain CSS sprites, and how you would implement them on a page or site.
  - A CSS sprite is an image that contains several images used in a page. This allows the use of a single dns lookup instead of one for every image. To utilize a CSS sprite, you'll typically need to use some utility to concatenate the images together. From there, the elements that you want to utilize the images for will use the sprite as a background image (with no repeat). Each specific element will have specific background position and height attributes to display the proper portion of the sprite corresponding to the correct image.
 * What are your favorite image replacement techniques and which do you use when?
+ - If I really had to use IR techniques (I feel as though their purpose is obfuscated for subsequent developers), I would use either the text indent method {text-indent: 100%, overflow: hidden} or font method {font: 0/0 a;color: transparent;text-shadow:none}. I have no real opinion on when to use which.
 * How would you approach fixing browser-specific styling issues?
+ - My approach is to typically use a css normalizer or css reset. From there, I do my best to make sure that forms and fonts are as uniform as possible. After that, its simply a matter of making sure that the appropriate browser prefixes are applied to style rules that need them. Special cases may exist in regards to box model differences between browsers, especially IE<=9. There has to be a logical decision made on whether or not the company has to support those versions and the CSS quirks they carry with them.
 * How do you serve your pages for feature-constrained browsers?
-  * What techniques/processes do you use?
+ - The assumption I will make here is that this means earlier browser versions or mobile browser versions in which many modern day API's do not exist. There are two real strategies that I believe you can use. One would be to either provide the functionality through polyfills that use javascript to implement native functionality API's like Geolocation. The other would be to use resources to find what API's can be used without compatibility issues (such as caniuse.com).
 * What are the different ways to visually hide content (and make it available only for screen readers)?
+ - This question is very similar to that of image replacement techniques. I would simply employ the same techniques without using a background image. An additional way I didn't talk about previously would be to use the rectangle clip method {clip: rect(0,0,0,0);height:0,width:0,border:0}}, though that could run into compatibility issues.
 * Have you ever used a grid system, and if so, what do you prefer?
+ - Yes, grid systems are pretty common now-a-days. I typically prefer to use frameworks with less excess baggage like Skeleton, but I have used Foundation and Bootstrap's grid system in the past.
 * Have you used or implemented media queries or mobile specific layouts/CSS?
+ - Yes, I prefer to design for mobile form factors first. Typically this means designing for width constraints of <720 (mobile), >720 (tablet) and >1000 (desktop). By this, I mean I prefer to create a responsive layout that works for desktop, tablet and mobile. I understand that this is not always possible and sometimes mobile needs its own layout, but I find it preferable to avoid that if possible.
 * Are you familiar with styling SVG?
+ - No
 * How do you optimize your webpages for print?
+ - I usually have a separate css file for print. The considerations I make are:
+   - for the removal of non-critical graphics and images
+   - avoid tables since they break oddly in many cases
+   - remove navigation links and normalize fonts
 * What are some of the "gotchas" for writing efficient CSS?
+ - Psuedoselectors and regex selectors carry performance overhead with them
+ - Overqualified selectors (selectors with additional unneeded parts like ".menu li a span") cause performance overhead and create specificity issues (these are also called multiple descendant selectors)
+ - CSS selectors are executed from right to left. This means if you have a very generic tag as the key selector, the selector will still be slow even if you have an id as the first tag.
+ - Id's tend to be the fastest selectors while universal tags are the slowest (though compared to the others, this is pretty minor)
 * What are the advantages/disadvantages of using CSS preprocessors?
-  * Describe what you like and dislike about the CSS preprocessors you have used.
+ - Advantages:
+   - Your css can be the same phyiscally (into partials) as it is logically (one for nav, one for footer, etc.)
+   - Mixins provide you with the ability to reuse previously established styles
+   - Variables allow you to declare things like font color in a single place and reuse it
+   - Calculations allow you to calculate combinations of variables at compilation time and use those rules
+   - Nesting allows you to properly style elements and their children in a more succinct format
+ - Disadvantages:
+   - Setup can be onerous.
+   - Maps are typically required for use in browsers to see the CSS in a readable format
+   - Abstractions can also cause terribly overqualified selectors
+   - The compiled file can be much larger and more unreadable than a CSS file created manually
 * How would you implement a web design comp that uses non-standard fonts?
+ - TBD
 * Explain how a browser determines what elements match a CSS selector.
+ - The browser processes selectors from right to left, using the rightmost selector as the key selector. It traverses the tree, finding an appropriate node, and then attempts to evaluate the rest of the selector by looking up the dom tree to verify the containing elements match the remaining selectors. If not, it moves onto subsequent matches for the key selector.
 * Describe pseudo-elements and discuss what they are used for. 
+ - Psuedo-elements are CSS3 constructs that allows the styling of more granular parts of a targeted element like ::first-line, ::first-letter, ::before and ::after.
 * Explain your understanding of the box model and how you would tell the browser in CSS to render your layout in different box models.
+ - The box model is how the browser (more specifically the rendering engine) calculates visual positioning of elements. It is typically made up of content, padding, border and margin (from innermost to outermost). Common differences between most box models involves calculating the height and width of an element. Historically the box model has not included padding and border in calculation of height and width, though in recent years, this has changed to include them. (Funny enough, IE was the pioneer of the inclusion of padding and border).
 * What does ```* { box-sizing: border-box; }``` do? What are its advantages?
+ - The above mentioned css causes the rendering engine to include padding and border in height and width calculations. This means no longer having to do additional calculations for those properties to properly set dimensions.
 * List as many values for the display property that you can remember.
+ - none
+ - inherit
+ - block
+ - inline
+ - inline-block
 * What's the difference between inline and inline-block?
+ - The former does not respect margin and padding (in accordance with non-block level elements). The latter respects them but does not use a new line like typical block level elements.
 * What's the difference between a relative, fixed, absolute and statically positioned element?
+ - Statically positioned elements are the default element behavior. Absolutely positioned elements are positioned in relation to a non-statically positioned parent element (this could be either the root element or a more deeply embedded element) based on distance from the 4 sides of the parent element (top,right,left and bottom). Relatively positioned elements are positioned in basically the same way for just their immediate parent. Fixed positioning is oriented based on the viewport of the browser. All non-statically positioned elements typically ignore the padding and margin applied to them.
 * The 'C' in CSS stands for Cascading.  How is priority determined in assigning styles (a few examples)?  How can you use this system to your advantage?
+ - Priority is typically referred to in the form of specificity represented as (0,0,0,0). Selectors used in each style rule determines the specificity. Mathematically, the formula is as follows:
+   Element selector - (0,0,0,1)
+   Class selector - (0,0,1,0)
+   Id selector - (0,1,0,0)
+   Inline style or important! attribute - (1,0,0,0)
 * What existing CSS frameworks have you used locally, or in production? How would you change/improve them?
+ - Foundation and Bootstrap. Most complaints with Foundation and Bootstrap revolve around size. As such, I would simply remove styles that I don't use. (This is offered by both Foundation and Bootstrap in the form of select compilation of css modules). It doesn't completely solve the issue though, so I would also prefer to simply have a grid system and compose the rest of the framework myself for further improvement.
 * Have you played around with the new CSS Flexbox or Grid specs?
+ - No
 * How is responsive design different from adaptive design?
+ - Responsive design is the idea of creating a fluid layout that responds to the dimensions of the users viewport appropriately (typically this means transforming between devices) while adaptive design offers different layouts to different devices.
 * Have you ever worked with retina graphics? If so, when and what techniques did you use?
+ - Yes, retina graphics means dealing with an increased pixel density viewport. This means that graphics that were sharp could become fuzzy and positioning of elements could be unpredictably off. Positioning of elements can be dealt with by using non-pixel based size units such as em, rem or percentage based sizings (which you should really be doing anyway). Images are a bit tougher since higher definition images also mean higher bandwidth overhead. Currently there are CSS media queries like (min-device-pixel-ratio: 2) to target contentious images as well as browser document properties you can monitor via Javascript. To combat the side of images, you can try using webp format and provide a lower quality fallback.
 * Is there any reason you'd want to use `translate()` instead of *absolute positioning*, or vice-versa? And why?
+ - For animations (which I assume is what you would use translate or change absolute positioning for), CSS animation are not particularly suited in terms of performance. Size transformations and opacity changes work well and those modifications should be defaulted to CSS use, however translate (or potentially translate3d) is more suited for moviing around elements since it allows GPU acceleration not possible with translation via CSS.
 
 #### JS Questions:
 
