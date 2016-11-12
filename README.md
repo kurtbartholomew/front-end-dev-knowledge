@@ -255,55 +255,138 @@
 #### JS Questions:
 
 * Explain event delegation
+ - Event delegation is associated with event listeners. The basic idea is that instead of placing an event listener on a potentially ridiculous amount of child elements, one is placed on a parent element. As events bubble up the DOM, this event listener qualifies the sources of the events with some sort of conditional (typically an element selector). If the element qualifies positively, the event is handled with the event listener function.
 * Explain how `this` works in JavaScript
+ - this can mean several different things depending on the manner in which code is invoked but in most cases, it typically means the object and associated scope in which code is currently being executed (execution context). An example would be if a global function is being invoked in a browser, window (or equivalent representation of the root document) would be the reference held in "this".
 * Explain how prototypal inheritance works
-* What do you think of AMD vs CommonJS?
+ - On almost all constructs in Javascript exists a reference to a collection of basic methods and variables. This is called the prototype of an object. All non-primitive objects (everything that is not a number) inherit from the Object prototype. From that prototype, other object types such as arrays inherit from the prototypes for their more complex data structures.
+* What do you think of AMD vs CommonJS? CommonJS is a bit easier to understand and use in terms of modularity using the require and exports constructs but it seems to have its place more on the server side with node. AMD and its define construct seem to fit better on the client side but considering the popularity of libraries like browserify (using CommonJS syntax) vs that of Require.js (using more AMD syntax), CommonJS-like constructs seem more likely. This can be seen in the CommonJS-like form of ES2015's import function.
 * Explain why the following doesn't work as an IIFE: `function foo(){ }();`.
+  - You can't immediately invoke a function declaration.
   * What needs to be changed to properly make it an IIFE?
+  - Put the declaration inside parentheses "(function foo(){})();". That would evaluate correctly.
 * What's the difference between a variable that is: `null`, `undefined` or undeclared?
+  - "null" is a falsy value representing the lack of an initialized value purposefully set by the coder.
+  - "undefined" is a falsy value representing the lack of an initialized value for any object, declared or not
+  - "undeclared", while existing conceptually, is not implemented. When a variable is declared but not initialized and attempts to be referenced, it will deliver an "undefined" value
   * How would you go about checking for any of these states?
+    - Existence of variables can be checked by more verbose (variable1 === undefined || variable === null) or a simpler but more error prone if(variable1)
 * What is a closure, and how/why would you use one?
+ - A closure is an execution context that possibly contains functions and/or variables that are accessible to code further down the stack. In other words, a persistent local variable scope that can be accessed by subsequently created scopes.
+ - Closures are useful to allow the use of caching or counting mechanisms.
 * What's a typical use case for anonymous functions?
+ - Anonymous functions are great in a couple different scenarios:
+  1. a function returns another function, the returned function would make no sense to be declared
+  2. a function is used in a functional context, ie map or reduce
+  3. a function is passed along as an object through several contexts
 * How do you organize your code? (module pattern, classical inheritance?)
+ - I find using closured modules to decorate an overall object with namespaces is most useful. I try to use inheritance sparingly since it is very easy to create confusing hierarchies.
 * What's the difference between host objects and native objects?
 * Difference between: `function Person(){}`, `var person = Person()`, and `var person = new Person()`?
+ - The former simply executes the function. The latter creates a new object, sets its prototype to Person, sets this to the object's execution context, executes its constructor and returns the object.
 * What's the difference between `.call` and `.apply`?
+ - Call executes a function in the context of the object passed as the first argument and uses the remaining arguments as is.
+ - Apply executes a function in the context of the object passed as the first argument and expects an array as the second argument. This array becomes the arguments array for the newly executing function
 * Explain `Function.prototype.bind`.
+ - Bind returns a function that will always execute in the context of the object passed as the first argument
 * When would you use `document.write()`?
+ - Only if I ever wanted to rewrite the contents of a page as a whole, which is almost never. Using it is typically a poor choice.
 * What's the difference between feature detection, feature inference, and using the UA string?
+ - Feature detection is directly checking for the existence and possible execution of features themselves
+ - Feature inference is checking variables or other status constructs that allow you to infer what the availability of an API is
+ - Using the UA string means attempting to map User Agent type and version to an available set of features (this is usually a bad idea since UA strings can be spoofed pretty easily)
 * Explain AJAX in as much detail as possible.
+ - (Asynchronous Javascript and XML) is an http request usually of type GET or POST sent to a specified url. The use of this kind of request does not require the loading of a page. An average use of this kind of request is to hit an endpoint on a server and return data to be used to update a portion of the page via Javascript. As with the any http request, it can return any range of errors and error codes. The request fires events based on the status of the request such as onreadystatechange. When these events are caught, the response payload (either error or data) is handled as per the function assigned to it.
 * Explain how JSONP works (and how it's not really AJAX).
+ - JSONP (JSON with Padding) is the process of adding a script tag to the head of the document whose src attribute targets an (usually cross domain) endpoint. The URI used must include a special query string parameter recognized by the server whose endpoint it is reaching. The parameter itself will have the name of a declared function as its assigned value (Example: http://crossdomain.org?callback=fancyCallbackFunction). Data in JSON format will be returned and handled by the callback function. This differs from AJAX because it uses a request directly from an element as opposed to the usage of the XMLHttpRequest construct that AJAX uses.
 * Have you ever used JavaScript templating?
+ - Yes
   * If so, what libraries have you used?
+   - Underscore, Mustache/Handlebars and Jade
 * Explain "hoisting".
+ - When a variable or object in Javascript is declared, the declaration of the object (but not the assignment) is raised to the top of the current scope, allowing for reference throughout the scope
 * Describe event bubbling.
+ - When an event occurs in the DOM, that event does happen once. It travels up the DOM tree, firing the event on every parent until it fires on the root document. This is what makes event delegation possible.
 * What's the difference between an "attribute" and a "property"?
+ - Under the assumption that this means HTML attribute and DOM property, an HTML attribute is a defined part of the HTML specification that gives definition to how HTML will be displayed while a property is the codified representation of that definition within the DOM. (Example: "class" is an attribute of an element and DOMNode.className is a property)
 * Why is extending built-in JavaScript objects not a good idea?
+ - This leads to unexpected behavior (and probably undocumented) for other developers that would depend on an otherwise stable API. Besides being error-prone, this represents a cognitive overhead that developers will constantly have to deal with.
 * Difference between document load event and document ready event?
+ - document.ready is a jQuery construct while document.onload is a standard event
+ - document.ready fires after the DOM is fully parsed and loaded while document.onload fires only after all content (DOM and all pictures,fonts,etc) is loaded
 * What is the difference between `==` and `===`?
+ - "==" is the equals operator and "===" is the strict equals operator
+ - "==" compares values and uses type coercion to compare different types
+ - "===" compares values and does not use type coercion (comparison between different types will fail)
 * Explain the same-origin policy with regards to JavaScript.
+ - Requests made from a web page must be made to the same domain as the page the user is currently on. (Example: http://google.com cannot make requests to http://pencils.com) This is to prevent cross site scripting attacks that use credentials in cookies or other storage currently stored on the browser to illegitimately access the users still logged in accounts. (An example would be you visit your banking site and access your account. Shortly afterwards, you go to a site that has a hidden request in a link you click that sends an API request to your banking site that would send money to China. Since your credentials are still valid, the request goes through)
 * Make this work:
 ```javascript
 duplicate([1,2,3,4,5]); // [1,2,3,4,5,1,2,3,4,5]
+
+var duplicate = function(arrayToBeDuplicated) {
+    for(var i = 0; i < arrayToBeDuplicated.length; i++) {
+        arrayToBeDuplicated[arrayToBeDuplicated.length] = arrayToBeDuplicated[i];
+    }
+    return arrayToBeDuplicated;
+};
 ```
 * Why is it called a Ternary expression, what does the word "Ternary" indicate?
+ - It is called ternary because it handles 3 arguments (ternary in latin means 3 at once). A ternary operator is a shorthand conditional, doing a boolean check on the first argument and assigning either the second or third argument based on the conditional.
 * What is `"use strict";`? what are the advantages and disadvantages to using it?
+ - Strict mode is useful when attempting to prevent some of the more quirky aspects of Javascript. Examples which it prevents include:
+   - Using undeclared variables
+   - Deleting objects and variables that are not properties
+   - Duplicate parameter names
+   - Non-standard formats for numbers and strings (octals and literal escape characters)
+   - Using keywords of the language as variable names (eval and arguments)
+ - Disadvantages for not using `use strict` usually means a loss of flexibility.
 * Create a for loop that iterates up to `100` while outputting **"fizz"** at multiples of `3`, **"buzz"** at multiples of `5` and **"fizzbuzz"** at multiples of `3` and `5`
+```
+  for(var i = 0; i <= 100; i++) {
+      if(i % 3 && i % 5) { 
+        console.log("fizzbuzz"); 
+      } else if(i % 3) { 
+        console.log("fizz");
+      } else if(i % 5) {
+        console.log("buzz");
+      }
+  }
+```
 * Why is it, in general, a good idea to leave the global scope of a website as-is and never touch it?
-* Why would you use something like the `load` event? Does this event have disadvantages? Do you know any alternatives, and why would you use those?
+ - Things in global scope can easily be modified and accessed, allowing for manipulation of important values. In addition, this opens up the program to having accidental collisions when using common variable names, which will lead to unexpected behavior.
+* Why would you use something like the `load` event? Does this event have disadvantages? 
+ - The on load event is used for the purpose of knowing when a page and all its content is loaded. Unfortunately, this means that all the content (even high resolution pictures) will be downloaded before this is fired, which can vastly increase the amount of perceived latency.
+Do you know any alternatives, and why would you use those?
+ - Using an event listener to listen for the event "DOMContentLoaded" and waiting until that event is fired to start additional work on the page is a good idea. I prefer this method because it allows the usage of scripts after the DOM has been fully loaded but does not depend on other exterior assets having been loaded.
 * Explain what a single page app is and how to make one SEO-friendly.
+ - A single page application is an application with a root path that simulates the navigating to separate pages without reloading. These pages are populated and rendered by AJAX requests in the background that retrieve necessary data. To improve the SEO of an SPA, you can potentially render the pages on the server side and only change small portions of the actual pages with data from async requests.
 * What is the extent of your experience with Promises and/or their polyfills?
+ - I have a good knowledge of Promises and their polyfills. I've used several versions of them in production like bluebird and q.
 * What are the pros and cons of using Promises instead of callbacks?
+ - Promises can be a bit tricky to understand and the implementation of a polyfill can be complicated but they go a long way to improve asynchronous requests. Firstly, a series of promises changes what some people call the pyramid of death or callback hell to an easily readable process. Second, error handling is vastly improved as the process short-circuits to the first catch instead of having to place error handling in every single callback. Third, the code becomes more declarative in nature and is much easier to understand.
 * What are some of the advantages/disadvantages of writing JavaScript code in a language that compiles to JavaScript?
+ - Languages that transpile to Javascript can be much easier and more terse to write in. It can allow people to be more productive and efficient with less written code. This, however, has the trade-off of having transpiled code that is difficult to read and debug through. Much like minified code, it can be difficult to read and debug because there is not a one to one relationship with the code you actually wrote. Not only that, there can be compatibility issues with older browsers unless you are careful.
 * What tools and techniques do you use debugging JavaScript code?
+ - Depends on whether it is client side or server side javascript. On client side, dev tools in most major browsers is more than enough. For server side, node inspector is very useful for server debug. Postman or curl is great for testing endpoints. Unit tests are a wonderful way to debug isolated portions of code.
 * What language constructions do you use for iterating over object properties and array items?
+ - Objects (for - in)
+ - Arrays (for, forEach, map, reduce)
+ - If libraries and polyfills are included, there are a ridiculous amount of functional constructs available for objects and arrays in underscore and lodash.
 * Explain the difference between mutable and immutable objects.
+ - A mutable object is one whose properties can be changed while an immutable one cannot.
   * What is an example of an immutable object in JavaScript?
+   - An object whose properties are closured and only accessible via declared get functions is would be a good example of immutable. Another option would be to simply define properties with `writable: false`.
   * What are the pros and cons of immutability?
+   - You don't have to worry about holding the correct state in an immutable object, but this does mean that you will incur larger overhead creating more copies of data
   * How can you achieve immutability in your own code?
+   - As previously mentioned, created properly closured objects allows them access to their own properties without exposing them to changes.
 * Explain the difference between synchronous and asynchronous functions.
+ - A synchronous operation waits until all instructions are finished running before proceeding while an asynchronous function's code proceeds on, only firing off associated code one a condition has been met (this usually means a response from a remote source)
 * What is event loop?
+ - A synchronous process in which the runtime waits for messages to be put in a queue to execute functions or other statements.
   * What is the difference between call stack and task queue?
+   - The task or message queue keeps track of statements to be executed by the runtime. When a message is retrieved from the queue and run, the associated statement is executed. This creates a stack frame for the associated function call (and its subsequent function calls). Once the statement is done executing (and thus the stack frame is gone), the next item is pulled from the task queue and run.
 
 #### Testing Questions:
 
