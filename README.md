@@ -451,14 +451,31 @@ Do you know any alternatives, and why would you use those?
  - After the HTML and CSS are parsed, a render or frame tree is created which applies styles to the nodes of the tree. Layers and positioning are computed.
  - Finally, the contents of the render tree are composited and painted to the screen.
 * What are the differences between Long-Polling, Websockets and Server-Sent Events?
+ - Long-Polling is starting a request and keeping it open until a response is received. Websockets instead, establish a persistent TCP connection allowing users to participate in a specific "conversation" of events. Server-Sent events (also called push notifications) are events sent via content stream over a persistent TCP connection and is currently only available via the EventSource browser API.
 * Explain the following request and response headers:
   * Diff. between Expires, Date, Age and If-Modified-...
+   - Expires sets when a request in the cache becomes stale. Date is the header with which we decide a response's age. Age is the time since the response was created or re-validated by the server. If-Modified headers forces the browser to ignore the cached response if the date exceeds the if-modified header.
   * Do Not Track
+   - A request header set to indicate the client does not want persistent tracking cookies sent to their browser
   * Cache-Control
+   - More recent response header controlling caching behavior. It revolves around a couple settings:
+     - no-store : prevent caching completely
+     - private or public : prevent or allow use of intermediate caches
+     - max-age : used to calculate expiration
   * Transfer-Encoding
+   - A response header allowing for the response to be delivered to the client in different forms. It mostly applies to if and how the response should be compressed.
   * ETag
+   - Entity Tags are headers used in both responses and requests. They are related to caching. Servers send ETags in their responses and those etags are used to check if, since the last response, anything has changed with the page being requested. If an Etag in a request matches the Etag generated on the server, it may send a 304 unmodified status, which tells the browser to use the cached response instead.
   * X-Frame-Options
+   - A response header allowing, selectively allowing, or preventing the embedding of your content in another page via frames.
 * What are HTTP actions? List all HTTP actions that you know, and explain them.
+ - GET : Retrieve content from a url endpoint
+ - POST : Add or update data via a url endpoint
+ - DELETE : Remove data via a url endpoint
+ - UPDATE : Explicity update data via a url endpoint (not an basic action)
+ - PUT : Explicity replace data via a url endpoint (not a basic action)
+ - PATCH : Explicity merge or update data via a url endpoint (not a basic action)
+ - OPTIONS : A default that can represent any non-standard action
 
 #### Coding Questions:
 
@@ -466,21 +483,45 @@ Do you know any alternatives, and why would you use those?
 ```javascript
 var foo = 10 + '20';
 ```
+Answer
+```javascript
+'1020'
+```
 
 *Question: How would you make this work?*
 ```javascript
 add(2, 5); // 7
 add(2)(5); // 7
 ```
+Answer
+```javascript
+var add = function(first, second) {
+  var firstNum = first;
+  if(second === undefined) {
+    return function(secondNum) {
+      return firstNum + secondNum;
+    }
+  }
+  return first + second;
+};
+```
 
 *Question: What value is returned from the following statement?*
 ```javascript
 "i'm a lasagna hog".split("").reverse().join("");
 ```
+Answer:
+```javascript
+"goh angasal a m'i"
+```
 
 *Question: What is the value of `window.foo`?*
 ```javascript
 ( window.foo || ( window.foo = "bar" ) );
+```
+Answer:
+```javascript
+"bar"
 ```
 
 *Question: What is the outcome of the two alerts below?*
@@ -492,6 +533,9 @@ var foo = "Hello";
 })();
 alert(foo + bar);
 ```
+Answer
+First alert will display "Hello World".
+There will be no second alert since bar is in a closured scope that is not available during the second alert call.
 
 *Question: What is the value of `foo.length`?*
 ```javascript
@@ -499,6 +543,8 @@ var foo = [];
 foo.push(1);
 foo.push(2);
 ```
+Answer
+2
 
 *Question: What is the value of `foo.x`?*
 ```javascript
@@ -506,6 +552,8 @@ var foo = {n: 1};
 var bar = foo;
 foo.x = foo = {n: 2};
 ```
+Answer
+foo.x is undefined
 
 *Question: What does the following code print?*
 ```javascript
@@ -515,6 +563,10 @@ setTimeout(function() {
 }, 0);
 console.log('three');
 ```
+Answer
+one
+three
+two
 
 #### Fun Questions:
 
