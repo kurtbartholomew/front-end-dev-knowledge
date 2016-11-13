@@ -391,20 +391,65 @@ Do you know any alternatives, and why would you use those?
 #### Testing Questions:
 
 * What are some advantages/disadvantages to testing your code?
+ - Testing typically takes a lot longer to write than the code itself but if written correctly, guards against edge cases and regression
 * What tools would you use to test your code's functionality?
+ - A base suite of tools like Jasmine or Mocha for testing, additional libraries for stubs and mocks as well as a task runner like grunt or gulp to automate.
 * What is the difference between a unit test and a functional/integration test?
+ - A unit test tests a small isolated piece of functionality while a functional/integration test typically incudes an entire process like saving a user.
 * What is the purpose of a code style linting tool?
+ - To assist developers in adhering to a common style of implementation so the entire code base is easily readable to anyone on the team.
 
 #### Performance Questions:
 
 * What tools would you use to find a performance bug in your code?
+ - Memory/latency profilers and flamegraphs to keep track of where excessive overhead and bottlenecks are.
 * What are some ways you may improve your website's scrolling performance?
+ - Attempting to load things asynchronously instead of all at once is important. Reasonable pagination of content allows below the fold content loading to be heavily reduced. Another option is deferring web fonts to load until after the other content has loaded. It is important to give the user content and enhance it instead of giving it all at once if the latter will cause an increased perception of latency.
 * Explain the difference between layout, painting and compositing.
+ - Layout, painting, and compositing refers to the stages of rendering the HTML in a browser. The rendering engine of a browser first parses and creates a render tree. From there, it uses that information to create a second tree for layout which decides the positioning of elements (this is implemented differently between browsers). From there, the elements are painted on the screen. Lastly, the elements are composited and the layout flow is applied.
 
 #### Network Questions:
 
 * Traditionally, why has it been better to serve site assets from multiple domains?
+ - Traditionally, browsers have a limit to the amount of assets they can serve from a single domain. Historically, it has been a single asset at a time, though now it has been increased in later versions of browsers.
 * Do your best to describe the process from the time you type in a website's URL to it finishing loading on your screen.
+ - Text in the address bar is parsed.
+ - The HTTP Strict Transport Security list is checked to see if the website requires the request to be in HTTPS. The request is changed to HTTPS if only that is accepted.
+ - Non-ASCII unicode characters are transformed are encoded into ASCII
+ - The browser does a DNS lookup (that is, transforming the host name into an ip address) using the following resources in this order:
+     - Local browser cache
+     - OS hosts file
+     - Local router or ISP's configured top level DNS
+ - An Address Resolution Protocol request is broadcast locally to retrieve the IP and MAC address of the default gateway or DNS server
+ - Once the reply is retrieved (either from the cache or routing tables), a UDP request is sent to the DNS server to find the entry for the hostname in the address bar
+ - If the DNS contacted does not contain the hostname, requests are made up to the top level name server if needed to resolve the hostname to an ip
+ - Once the IP is resolved, a UDP request is made requesting a TCP socket stream
+ - A packet is created with information like:
+   - Destination port
+   - Source port
+   - Destination IP
+   - Source IP
+   - Source MAC
+   - Source Router MAC
+ - Once the packet reaches the destination and uses an initial sequence number with the SYN bit set to true
+ - The server sets its own initial sequence number and responds with both SYN and ACK bits set
+ - The client begins sending packets with the ACK bit set
+ - The server sends back ACK responses
+ - Once the interaction is finished, either the server or client send a packet with FIN bit set.
+ - The other sends an ACK response packet and then a FIN packet
+ - Finally, the original sender of the first FIN packet sends an ACK packet
+ - If HTTPS has been used, a TLS handshake must occur before the SYN ACK FIN process:
+   - Client sends a message to server with its TLS version, ciphers, and compression methods.
+   - Server responds with TLS version, selected cipher/compression and a security certificate
+   - Client verifies the certificate against their list of authorities and sends a random alphanumeric string encoded with the public key in the certificate
+   - Server decryptes the message with its private key and generates a master key
+   - Client generates a master key and sends a hash encrypted with the master key
+   - Server creates its own hash and decrypts the client's hash. If they match, it sends a message saying they can communicate.
+   - The SYN ACK FIN process from above is started and all data is encrypted using the master key that both sides have
+ - Requests received from the server will typically have status headers and if there was no error in the response, an HTML payload.
+ - Once the HTML is received, the browser tokenizes/parses the HTML and creates a parse tree.
+ - After the HTML and CSS are parsed, a render or frame tree is created which applies styles to the nodes of the tree. Layers and positioning are computed.
+ - Finally, the contents of the render tree are composited and painted to the screen.
 * What are the differences between Long-Polling, Websockets and Server-Sent Events?
 * Explain the following request and response headers:
   * Diff. between Expires, Date, Age and If-Modified-...
