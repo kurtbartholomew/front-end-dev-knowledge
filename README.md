@@ -205,7 +205,7 @@
  - Id's tend to be the fastest selectors while universal tags are the slowest (though compared to the others, this is pretty minor)
 * What are the advantages/disadvantages of using CSS preprocessors?
  - Advantages:
-   - Your css can be the same phyiscally (into partials) as it is logically (one for nav, one for footer, etc.)
+   - Your css can be the same physically (into partials) as it is logically (one for nav, one for footer, etc.)
    - Mixins provide you with the ability to reuse previously established styles
    - Variables allow you to declare things like font color in a single place and reuse it
    - Calculations allow you to calculate combinations of variables at compilation time and use those rules
