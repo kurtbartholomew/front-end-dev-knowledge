@@ -15,7 +15,7 @@
 #### General Questions:
 
 * What did you learn yesterday/this week?
- - How to use python function decorators in Flask to define routes
+ - How fourier transforms work
 * What excites or interests you about coding?
  - The ability to design and pull your ideas from your head into the work for someone
    else to experience and enjoy
